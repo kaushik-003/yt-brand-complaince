@@ -7,7 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage
 
 #import state schema
-from backend.src.graph.state import VideoAuditState, ComplainceIssue
+from backend.src.graph.state import VideoAuditState
 
 #import service
 from backend.src.services.video_indexer import VideoIndexerService
@@ -66,7 +66,7 @@ def audio_content_auditor_node(state: VideoAuditState) -> Dict[str, Any]:
     and generate compliance issues if any along with the final report
     '''
     logger.info(f"-----[Node:COMPLIANCE_AUDITOR] querying Knowledge Base & LLM")
-    transcript = state.get("trasncript", "")
+    transcript = state.get("transcript", "")
     if not transcript:
         logger.warning("No transcript available for auditing. Skipping compliance audit.")
         return {
@@ -95,12 +95,12 @@ def audio_content_auditor_node(state: VideoAuditState) -> Dict[str, Any]:
     ocr_text = state.get("ocr_text", [])
     query_text = f"{transcript} {' '.join(ocr_text)}"
     docs = vectorstore.similarity_search(query_text, k=3)
-    retrived_rules = "\n\n".join([doc.page_content for doc in docs])
+    retrieved_rules = "\n\n".join([doc.page_content for doc in docs])
 
     system_prompt = f"""
                     You are a senior compliance auditor,
                     OFFICIAL COMPLIANCE RULES:
-                    {retrived_rules}
+                    {retrieved_rules}
                     INSTRUCTIONS:
                     1. Analyze the Transcript and OCR text below
                     2. Identify any compliance issues based on the official rules provided above

@@ -2,7 +2,7 @@ import operator
 from typing import Annotated, List, Dict, Any, Optional, TypedDict
 
 #Error report 
-class ComplainceIssue(TypedDict):
+class ComplianceIssue(TypedDict):
     category: str
     description: str #specific detail of the violation
     severity: str
@@ -19,12 +19,12 @@ class VideoAuditState(TypedDict):
     #ingestion and extraction related fields
     local_file_path: Optional[str] #temporary local path where the video
     video_metadata: Dict[str, Any] 
-    trasncript: Optional[str] #full transcript of the video
+    transcript: Optional[str] #full transcript of the video
     ocr_text: List[str]
 
     #analysis output fields
     #list of all the violations found by the system with details
-    compliance_issues: Annotated[List[ComplainceIssue], operator.add]
+    compliance_issues: Annotated[List[ComplianceIssue], operator.add]
 
     #final deliverables
     final_status: str # PASS | FAIL
